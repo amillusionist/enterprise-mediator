@@ -1,0 +1,3 @@
+"gate_id","gate_name","sprint","gate_type","criteria","responsible_team","gate_date","approval_required","approver","bypass_criteria","automation_level","tools_used","success_metrics"
+"QG-001","Infrastructure Readiness Gate","Sprint 1","Security","Terraform plans reviewed; Security groups validated; No public S3 access","DevOps","2025-02-13","true","Security Architect","None","Partially Automated","Checkov,Terraform Validator","Zero critical security violations"
+"QG-002","AI Accuracy Gate","Sprint 2","Performance","Extraction accuracy > 90% on test set; PII redaction success 100%","AI Backend","2025-02-27","true","Data Lead","Accuracy > 80% with manual review flag enabled","Fully Automated","PyTest,Custom Evaluation Script","High precision/recall on extraction"

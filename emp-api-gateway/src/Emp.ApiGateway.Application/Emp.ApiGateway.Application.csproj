@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsNotAsErrors>NU1903</WarningsNotAsErrors>
+    <NoWarn>CS1591</NoWarn>
+    <RootNamespace>Emp.ApiGateway.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- CQRS Pattern Implementation -->
+    <PackageReference Include="MediatR" Version="12.2.0" />
+    
+    <!-- Object Mapping -->
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    
+    <!-- Validation Logic -->
+    <PackageReference Include="FluentValidation" Version="11.9.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
+    
+    <!-- Logging Abstractions -->
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    
+    <!-- DI Abstractions -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\emp-shared-contracts\src\EnterpriseMediator.Contracts\EnterpriseMediator.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

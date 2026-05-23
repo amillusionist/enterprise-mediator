@@ -1,0 +1,3 @@
+"gate_id","gate_name","sprint","gate_type","criteria","responsible_team","gate_date","approval_required","approver","bypass_criteria","automation_level","tools_used","success_metrics"
+"QG-SPRINT-1","Infrastructure Readiness","Sprint 1","Infrastructure","Terraform apply clean; EKS Cluster Healthy; RDS accessible","DevOps","2025-05-13","true","tech.lead@emp.com","None - Critical Foundation","Fully Automated","Terraform,AWS CLI","Zero critical infra alerts"
+"QG-SPRINT-2","AI Accuracy Check","Sprint 2","Testing","Extraction accuracy > 90% on test set; PII redaction verified","QA / AI","2025-05-27","true","product.owner@emp.com","Accuracy > 80% with warning label","Partially Automated","PyTest,Manual Review","No PII leakage in sanitized files"

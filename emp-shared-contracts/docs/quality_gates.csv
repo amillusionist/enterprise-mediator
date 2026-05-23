@@ -1,0 +1,4 @@
+"gate_id","gate_name","sprint","gate_type","criteria","responsible_team","gate_date","approval_required","approver","bypass_criteria","automation_level","tools_used","success_metrics"
+"QG-001","Infrastructure Freeze","Sprint 1","Security","tfsec passes; EKS nodes healthy; DB accessible only from VPC","DevOps","2025-02-13","true","architect@emp.com","None - Security Critical","Fully Automated","tfsec,checkov","Zero Critical/High vulns"
+"QG-002","AI Accuracy Check","Sprint 2","Performance","SOW Extraction Accuracy > 85% on test set","AI Team","2025-02-27","true","product.owner@emp.com","Manual correction UI is fully functional","Partially Automated","Custom eval script","F1 Score on field extraction"
+"QG-003","Financial Integrity","Sprint 2","Integration","Stripe Webhook Idempotency verified; Ledger updates correct","Backend Team","2025-02-27","true","fin.lead@emp.com","None - Financial Risk","Fully Automated","Jest,Stripe CLI","100% duplicate event rejection"

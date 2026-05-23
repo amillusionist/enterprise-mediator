@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Docker SDK 8 images: build net8.0 only; preserve net10.0 for local SDK 10 builds -->
+    <TargetFrameworks Condition="'$(DOCKER_BUILD)' == 'true'">net8.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(DOCKER_BUILD)' != 'true'">net8.0;net10.0</TargetFrameworks>
+    <RootNamespace>EnterpriseMediator.Contracts</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591</NoWarn>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>EnterpriseMediator.Contracts</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Enterprise Mediator Platform</Authors>
+    <Description>Shared contracts, DTOs, integration events, and enums for the Enterprise Mediator Platform.</Description>
+    <PackageTags>EMP;contracts;DTOs;events</PackageTags>
+  </PropertyGroup>
+
+</Project>

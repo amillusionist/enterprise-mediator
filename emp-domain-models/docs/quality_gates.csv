@@ -1,0 +1,4 @@
+"gate_id","gate_name","sprint","criteria","responsible_team","gate_date"
+"QG-INFRA","Infrastructure Readiness","Sprint 1","Terraform apply successful; EKS cluster health check passed; Nodes joined","DevOps","2025-05-16"
+"QG-AI","AI Pipeline Validation","Sprint 2","PII redacted in 95% of test docs; JSON schema validation passes for extracted data","Backend AI","2025-05-30"
+"QG-FIN","Payment Security Audit","Sprint 2","Webhook signature verification active; Idempotency tests passed; No sensitive data logged","Backend Finance","2025-05-30"

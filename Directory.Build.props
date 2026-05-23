@@ -1,0 +1,10 @@
+<Project>
+  <!--
+    Local Docker builds: suppress NU1903 (AutoMapper advisory) without removing packages.
+    Reversible; does not change production package versions.
+  -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
+    <WarningsNotAsErrors>NU1903</WarningsNotAsErrors>
+  </PropertyGroup>
+</Project>

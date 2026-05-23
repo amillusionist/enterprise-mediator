@@ -1,0 +1,50 @@
+name: API Gateway CI/CD
+
+on:
+  push:
+    branches: [main]
+    paths: ['emp-api-gateway/**']
+  pull_request:
+    branches: [main]
+    paths: ['emp-api-gateway/**']
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: emp-api-gateway
+      - name: Build
+        run: dotnet build --no-restore -c Release
+        working-directory: emp-api-gateway
+      - name: Test
+        run: dotnet test --no-build -c Release --verbosity normal
+        working-directory: emp-api-gateway
+
+  docker:
+    needs: build-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - uses: aws-actions/amazon-ecr-login@v2
+        id: ecr
+      - name: Build and push Docker image
+        run: |
+          docker build -t ${{ steps.ecr.outputs.registry }}/emp-api-gateway:${{ github.sha }} .
+          docker build -t ${{ steps.ecr.outputs.registry }}/emp-api-gateway:latest .
+          docker push ${{ steps.ecr.outputs.registry }}/emp-api-gateway:${{ github.sha }}
+          docker push ${{ steps.ecr.outputs.registry }}/emp-api-gateway:latest
+        working-directory: emp-api-gateway

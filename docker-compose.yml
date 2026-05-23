@@ -1,0 +1,217 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: emp_user
+      POSTGRES_PASSWORD: emp_dev_password
+      POSTGRES_DB: emp_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init-databases.sql:/docker-entrypoint-initdb.d/01-init-databases.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U emp_user -d emp_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: emp-api-gateway/Dockerfile
+    ports:
+      - "5000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      project-service:
+        condition: service_started
+      user-service:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=emp_db;Username=emp_user;Password=emp_dev_password"
+      ServiceUrls__ProjectService: "http://project-service:8080"
+      ServiceUrls__FinancialService: "http://financial-service:8080"
+      ServiceUrls__UserService: "http://user-service:8080"
+      ServiceUrls__AuditService: "http://user-service:8080"
+      RabbitMQ__Host: rabbitmq
+      RabbitMQ__Username: guest
+      RabbitMQ__Password: guest
+      Redis__ConnectionString: "redis:6379"
+      AllowedOrigins__0: "http://localhost:3000"
+      AWS__Region: "us-east-1"
+      AWS__Cognito__UserPoolId: "us-east-1_example"
+      AWS__Cognito__ClientId: "example_client_id"
+      LocalDevAuth__Enabled: "true"
+      LocalDevAuth__Issuer: "https://localhost/emp-dev-auth"
+      LocalDevAuth__Audience: "emp-platform-local"
+      LocalDevAuth__SigningKey: "LocalDevOnly_ChangeMe_Min32Chars_SigningKey!"
+      LocalDevAuth__Users__0__Email: "admin@local.dev"
+      LocalDevAuth__Users__0__Password: "Admin@123"
+      LocalDevAuth__Users__0__Name: "Local Admin"
+      LocalDevAuth__Users__0__Role: "SystemAdministrator"
+      LocalDevAuth__Users__0__TenantId: "local-tenant-001"
+      LocalDevAuth__Users__1__Email: "user@local.dev"
+      LocalDevAuth__Users__1__Password: "User@123"
+      LocalDevAuth__Users__1__Name: "Local User"
+      LocalDevAuth__Users__1__Role: "ClientContact"
+      LocalDevAuth__Users__1__TenantId: "local-tenant-001"
+
+  project-service:
+    build:
+      context: .
+      dockerfile: emp-project-management-service/Dockerfile
+    ports:
+      - "5001:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=emp_projects_db;Username=emp_user;Password=emp_dev_password"
+      RabbitMQ__Host: rabbitmq
+      RabbitMQ__Username: guest
+      RabbitMQ__Password: guest
+      Aws__CognitoAuthority: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_example"
+      Aws__Region: "us-east-1"
+      Aws__SowBucketName: "emp-local-sow-documents"
+      AllowedOrigins__0: "http://localhost:3000"
+      LocalDevAuth__Enabled: "true"
+      LocalDevAuth__Issuer: "https://localhost/emp-dev-auth"
+      LocalDevAuth__Audience: "emp-platform-local"
+      LocalDevAuth__SigningKey: "LocalDevOnly_ChangeMe_Min32Chars_SigningKey!"
+
+  user-service:
+    build:
+      context: .
+      dockerfile: emp-user-management-service/src/EnterpriseMediator.UserManagement.API/Dockerfile
+    ports:
+      - "5003:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=emp_users_db;Username=emp_user;Password=emp_dev_password"
+      RabbitMQ__Host: rabbitmq
+      RabbitMQ__Username: guest
+      RabbitMQ__Password: guest
+      AWS__Region: "us-east-1"
+      AWS__UserPoolId: "us-east-1_example"
+      AWS__AppClientId: "example_client_id"
+      LocalDevAuth__Enabled: "true"
+      LocalDevAuth__Issuer: "https://localhost/emp-dev-auth"
+      LocalDevAuth__Audience: "emp-platform-local"
+      LocalDevAuth__SigningKey: "LocalDevOnly_ChangeMe_Min32Chars_SigningKey!"
+
+  frontend:
+    build:
+      context: ./emp-frontend-webapp
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: "http://localhost:5000/api/v1"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+    environment:
+      API_URL: "http://api-gateway:8080/api/v1"
+      NEXT_PUBLIC_API_URL: "http://localhost:5000/api/v1"
+
+  # Optional services — start with: docker compose --profile optional up --build
+  financial-service:
+    profiles: ["optional"]
+    build:
+      context: .
+      dockerfile: emp-financial-service/Dockerfile
+    ports:
+      - "5002:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=emp_financials_db;Username=emp_user;Password=emp_dev_password"
+      RabbitMQ__Host: rabbitmq
+      RabbitMQ__Username: guest
+      RabbitMQ__Password: guest
+      AWS__Region: "us-east-1"
+      AWS__UserPoolId: "us-east-1_example"
+      Stripe__ApiKey: "sk_test_local_placeholder"
+      Stripe__WebhookSecret: "whsec_local_placeholder"
+      Wise__ApiToken: "local_placeholder"
+
+  ai-worker:
+    profiles: ["optional"]
+    build:
+      context: .
+      dockerfile: emp-ai-processing-worker/src/EnterpriseMediator.AiWorker/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=emp_db;Username=emp_user;Password=emp_dev_password"
+      ConnectionStrings__RabbitMq: "amqp://guest:guest@rabbitmq:5672/"
+      RabbitMQ__Host: rabbitmq
+      RabbitMQ__Username: guest
+      RabbitMQ__Password: guest
+      Ai__OpenAiEndpoint: "https://localhost/openai-placeholder"
+      Ai__OpenAiKey: "local-placeholder"
+      Ai__EmbeddingDeploymentName: "text-embedding-ada-002"
+      Ai__ChatDeploymentName: "gpt-4"
+      Aws__S3BucketName: "emp-local-sow-documents"
+      Aws__Region: "us-east-1"
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+  redis_data:

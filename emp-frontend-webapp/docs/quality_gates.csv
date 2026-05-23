@@ -1,0 +1,4 @@
+"gate_id","gate_name","sprint","criteria","gate_date","approval_required"
+"QG-001","Infrastructure Readiness","Sprint 1","Terraform apply successful in staging; EKS cluster healthy; RDS connection verified","2025-05-14","true"
+"QG-002","AI Pipeline Validation","Sprint 2","PII redaction verified on test set with >95% accuracy; Worker handles 10 concurrent uploads","2025-05-28","true"
+"QG-003","Financial Security Audit","Sprint 3","Stripe webhook signature verification enabled; Ledger idempotency tests passing; Role-based access confirmed","2025-06-11","true"

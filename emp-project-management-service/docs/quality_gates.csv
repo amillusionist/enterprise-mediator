@@ -1,0 +1,4 @@
+"gate_id","gate_name","sprint","criteria","responsible_team","gate_date","success_metrics"
+"QG-001","Infrastructure Readiness","Sprint 1","Terraform apply clean; EKS Cluster Active; RDS connection verified","DevOps","2025-02-14","Infrastructure deployed to staging without manual intervention"
+"QG-002","AI Pipeline Safety","Sprint 2","PII Redaction verified with test set; 0 PII leaks in logs; CSV import handles 5k rows","Backend/AI","2025-02-28","100% PII redaction on test corpus; No event loop blocks > 100ms"
+"QG-003","Financial Integrity","Sprint 3","Saga rollback verified on forced failure; Double spend tests pass; Vector search < 250ms","Backend/Finance","2025-03-14","Zero ledger inconsistencies in chaos tests"

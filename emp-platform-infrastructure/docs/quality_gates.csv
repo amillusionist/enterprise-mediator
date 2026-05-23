@@ -1,0 +1,3 @@
+"gate_id","gate_name","sprint","gate_type","criteria","responsible_team","gate_date","approval_required","approver","bypass_criteria","automation_level","tools_used","success_metrics"
+"QG-001","Infrastructure Readiness","Sprint 1","Infrastructure","Terraform apply clean; EKS Ready; RDS connectable","DevOps","2025-05-14","true","Tech Lead","None","Fully Automated","Terraform, kubectl","Zero manual steps required"
+"QG-002","Core Security","Sprint 1","Security","RBAC tests passing; MFA setup verified","Backend","2025-05-14","true","Security Lead","None","Partially Automated","Jest, OWASP ZAP","No critical vulnerabilities"

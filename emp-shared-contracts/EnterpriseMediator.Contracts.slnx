@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/EnterpriseMediator.Contracts/EnterpriseMediator.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/EnterpriseMediator.Contracts.Tests/EnterpriseMediator.Contracts.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,25 @@
+# Root Docker build context exclusions (monorepo builds)
+.git
+.github
+**/.vs
+**/.vscode
+**/.idea
+
+# Build outputs
+**/bin/
+**/obj/
+**/TestResults/
+**/coverage/
+
+# Frontend (not needed for .NET service images)
+emp-frontend-webapp/node_modules/
+emp-frontend-webapp/.next/
+
+# Docs and infrastructure (not needed in service images)
+docs/
+emp-platform-infrastructure/
+
+# Local secrets
+**/.env
+**/.env.*
+**/appsettings.Local.json
