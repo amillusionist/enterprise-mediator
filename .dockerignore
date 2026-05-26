@@ -1,25 +1,80 @@
-# Root Docker build context exclusions (monorepo builds)
+# Git / IDE
 .git
 .github
 **/.vs
 **/.vscode
 **/.idea
+**/*.suo
+**/*.user
 
-# Build outputs
+# Documentation
+docs/
+**/*.md
+LICENSE
+
+# .NET backend services (not required for frontend production image)
+emp-api-gateway/
+emp-ai-processing-worker/
+emp-project-management-service/
+emp-user-management-service/
+emp-financial-service/
+emp-core-shared-kernel/
+emp-domain-models/
+emp-shared-contracts/
+emp-platform-infrastructure/
+
+# UI library (not linked as workspace dependency yet)
+emp-ui-component-library/
+
+# .NET build artifacts
 **/bin/
 **/obj/
 **/TestResults/
+**/*.csproj
+**/*.sln
+**/*.slnx
+Directory.Build.props
+**/Directory.Build.props
+**/Directory.Packages.props
+global.json
+
+# Node artifacts
+**/node_modules/
+**/.next/
+**/dist/
 **/coverage/
+**/.turbo/
+**/.nx/
+**/storybook-static/
 
-# Frontend (not needed for .NET service images)
-emp-frontend-webapp/node_modules/
-emp-frontend-webapp/.next/
+# Tests
+**/tests/
+**/test/
+**/__tests__/
+**/e2e/
+**/*.spec.ts
+**/*.spec.tsx
+**/*.test.ts
+**/*.test.tsx
+**/playwright-report/
+**/.playwright/
 
-# Docs and infrastructure (not needed in service images)
-docs/
-emp-platform-infrastructure/
-
-# Local secrets
+# Secrets / local config
 **/.env
 **/.env.*
+!**/.env.example
+**/appsettings.Development.json
 **/appsettings.Local.json
+**/*secrets*
+
+# Docker / compose (avoid recursive context)
+docker-compose*.yml
+**/Dockerfile
+!Dockerfile
+
+# Misc
+**/.DS_Store
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/.pnpm-debug.log*
