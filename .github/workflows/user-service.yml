@@ -44,9 +44,8 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker build -t ${{ steps.ecr.outputs.registry }}/emp-user-service:${{ github.sha }} \
-            -f src/EnterpriseMediator.UserManagement.API/Dockerfile .
+            -f emp-user-management-service/src/EnterpriseMediator.UserManagement.API/Dockerfile .
           docker build -t ${{ steps.ecr.outputs.registry }}/emp-user-service:latest \
-            -f src/EnterpriseMediator.UserManagement.API/Dockerfile .
+            -f emp-user-management-service/src/EnterpriseMediator.UserManagement.API/Dockerfile .
           docker push ${{ steps.ecr.outputs.registry }}/emp-user-service:${{ github.sha }}
           docker push ${{ steps.ecr.outputs.registry }}/emp-user-service:latest
-        working-directory: emp-user-management-service

@@ -43,8 +43,7 @@ jobs:
         id: ecr
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ steps.ecr.outputs.registry }}/emp-financial-service:${{ github.sha }} .
-          docker build -t ${{ steps.ecr.outputs.registry }}/emp-financial-service:latest .
+          docker build -t ${{ steps.ecr.outputs.registry }}/emp-financial-service:${{ github.sha }} -f emp-financial-service/Dockerfile .
+          docker build -t ${{ steps.ecr.outputs.registry }}/emp-financial-service:latest -f emp-financial-service/Dockerfile .
           docker push ${{ steps.ecr.outputs.registry }}/emp-financial-service:${{ github.sha }}
           docker push ${{ steps.ecr.outputs.registry }}/emp-financial-service:latest
-        working-directory: emp-financial-service

@@ -44,9 +44,8 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker build -t ${{ steps.ecr.outputs.registry }}/emp-ai-worker:${{ github.sha }} \
-            -f src/EnterpriseMediator.AiWorker/Dockerfile .
+            -f emp-ai-processing-worker/src/EnterpriseMediator.AiWorker/Dockerfile .
           docker build -t ${{ steps.ecr.outputs.registry }}/emp-ai-worker:latest \
-            -f src/EnterpriseMediator.AiWorker/Dockerfile .
+            -f emp-ai-processing-worker/src/EnterpriseMediator.AiWorker/Dockerfile .
           docker push ${{ steps.ecr.outputs.registry }}/emp-ai-worker:${{ github.sha }}
           docker push ${{ steps.ecr.outputs.registry }}/emp-ai-worker:latest
-        working-directory: emp-ai-processing-worker

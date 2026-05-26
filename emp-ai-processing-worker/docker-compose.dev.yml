@@ -4,8 +4,8 @@ services:
   enterprisemediator.aiworker:
     image: enterprisemediatoraiworker
     build:
-      context: .
-      dockerfile: src/EnterpriseMediator.AiWorker/Dockerfile
+      context: ..
+      dockerfile: emp-ai-processing-worker/src/EnterpriseMediator.AiWorker/Dockerfile
     environment:
       - DOTNET_ENVIRONMENT=Development
       - Ai__OpenAiEndpoint=https://sample-resource.openai.azure.com/

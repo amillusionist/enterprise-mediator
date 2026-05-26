@@ -43,8 +43,7 @@ jobs:
         id: ecr
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ steps.ecr.outputs.registry }}/emp-api-gateway:${{ github.sha }} .
-          docker build -t ${{ steps.ecr.outputs.registry }}/emp-api-gateway:latest .
+          docker build -t ${{ steps.ecr.outputs.registry }}/emp-api-gateway:${{ github.sha }} -f emp-api-gateway/Dockerfile .
+          docker build -t ${{ steps.ecr.outputs.registry }}/emp-api-gateway:latest -f emp-api-gateway/Dockerfile .
           docker push ${{ steps.ecr.outputs.registry }}/emp-api-gateway:${{ github.sha }}
           docker push ${{ steps.ecr.outputs.registry }}/emp-api-gateway:latest
-        working-directory: emp-api-gateway
